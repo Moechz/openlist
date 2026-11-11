@@ -75,7 +75,7 @@
   "github_repo": "openlist",
   "upstream_version": "4.2.2",
   "release_tag_prefix": "v",
-  "version": "4.2.2-1",
+  "version": "4.2.2-2",
   "help": "https://github.com/Moechz/openlist/issues",
   "official": "https://github.com/OpenListTeam/OpenList",
   "license": "AGPL-3.0",
