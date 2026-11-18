@@ -25,10 +25,10 @@ Third-party notices
 
 OpenList is Copyright its upstream authors and is distributed under
 AGPL-3.0. This repository only packages the
-official container image `openlistteam/openlist:v4.2.2` from Docker Hub unmodified; no
+official container image `openlistteam/openlist:v4.2.9` from Docker Hub unmodified; no
 upstream source code is distributed here. All trademarks belong to their owners.
 This is an independent community package, not affiliated with the upstream
 project or TerraMaster.
 
-TOSAppSelfTestingTool is an official TerraMaster utility, redistributed here
-unmodified for local package validation.
+The TerraMaster self-testing tool used to validate the package is an official
+TerraMaster utility and is not redistributed in this repository.
