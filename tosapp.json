@@ -1,7 +1,7 @@
 {
   "app_id": "openlistdocker",
   "title": "OpenList",
-  "image": "openlistteam/openlist:v4.2.2",
+  "image": "openlistteam/openlist:v4.2.9",
   "repo_name": "openlist",
   "mode": "plain",
   "container_port": 5244,
@@ -15,68 +15,27 @@
     }
   ],
   "env": {
-    "TZ": "Asia/Shanghai",
-    "PUID": "1000",
-    "PGID": "1000"
+    "TZ": "Asia/Shanghai"
   },
   "auth": "OpenListTeam",
   "upstream_url": "https://github.com/OpenListTeam/OpenList",
   "upstream_license": "AGPL-3.0",
-  "descript": "OpenList is a file-list program that aggregates local storage and cloud drives behind one web UI with WebDAV support. This package runs the Docker Hub image as a non-root container and keeps its database and configuration in the application data folder.",
-  "release_note": "1. First release.",
-  "important": "The initial admin password is printed once in the container log on first start; open the web UI and change it, or run \"docker exec openlistdocker ./openlist admin set <new-password>\" as root on the NAS. Data lives in /Volume1/DockerAppData/openlistdocker/ and survives restarts and updates. The container runs as uid 1000. Needs DockerEngine; configure a registry mirror if Docker Hub is unreachable. Back up the data folder before uninstalling with data removal. Plain HTTP on the LAN.",
-  "probe": {
-    "user_in_image": "nobody",
-    "entrypoint": null,
-    "cmd": [
-      "sh",
-      "start.sh",
-      "prd"
-    ],
-    "exposed_ports": [
-      8080
-    ],
-    "declared_volumes": [],
-    "image_healthcheck": [
-      "CMD-SHELL",
-      "python healthcheck.py"
-    ],
-    "digest": "daya0576/beaverhabits@sha256:6cd7e464207369785c88cfd59f99c6cc44ec57f3a8d90c3439908da42271d69f",
-    "architecture": "x86_64",
-    "platforms": [],
-    "http_client_in_image": "",
-    "trial_run": {
-      "ok": false,
-      "http_code": "",
-      "state": "exited",
-      "paths": [],
-      "host_port": 18000,
-      "log_tail": "21, in connect\n    await_only(connection),\n    ~~~~~~~~~~^^^^^^^^^^^^\n  File \"/opt/pysetup/.venv/lib/python3.14/site-packages/sqlalchemy/util/_concurrency_py3k.py\", line 132, in await_only\n    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501\n           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^\n  File \"/opt/pysetup/.venv/lib/python3.14/site-packages/sqlalchemy/util/_concurrency_py3k.py\", line 196, in greenlet_spawn\n    value = await result\n            ^^^^^^^^^^^^\n  File \"/opt/pysetup/.venv/lib/python3.14/site-packages/aiosqlite/core.py\", line 168, in _connect\n    self._connection = await future\n                       ^^^^^^^^^^^^\n  File \"/opt/pysetup/.venv/lib/python3.14/site-packages/aiosqlite/core.py\", line 63, in _connection_worker_thread\n    result = function()\n  File \"/opt/pysetup/.venv/lib/python3.14/site-packages/aiosqlite/core.py\", line 466, in connector\n    return sqlite3.connect(loc, **kwargs)\n           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^\nsqlalchemy.exc.OperationalError: (sqlite3.OperationalError) unable to open database file\n(Background on this error at: https://sqlalche.me/e/20/e3q8)\n\n[2026-11-10 04:59:36 +0000] [11] [ERROR] Application startup failed. Exiting.\n[2026-11-10 04:59:36 +0000] [11] [INFO] Worker exiting (pid: 11)\n[2026-11-10 04:59:36 +0000] [9] [ERROR] Worker (pid:11) exited with code 3.\n[2026-11-10 04:59:36 +0000] [9] [ERROR] Shutting down: Master\n[2026-11-10 04:59:36 +0000] [9] [ERROR] Reason: Worker failed to boot.",
-      "files_in_mounts": ""
-    },
-    "docker_hub": {},
-    "github": {
-      "owner": "daya0576",
-      "repo": "beaverhabits",
-      "description": "A self-hosted habit tracking app without \"Goals\"",
-      "license": "BSD-3-Clause",
-      "homepage": "https://beaverhabits.com/demo"
-    }
-  },
+  "descript": "OpenList is a file-list program that aggregates local storage and cloud drives behind one web UI, with WebDAV access, file preview, upload and offline download. This package runs the official Docker Hub image unmodified as a non-root container; the first visit opens a setup wizard where the administrator password is set, and all data stays in the application data folder.",
+  "release_note": "1. Review remediation: PRIVACY.md and NOTICE.md added, README privacy / third-party / licence sections, the help field now opens the privacy policy, and the Chinese descriptions were rewritten (they described another application). 2. Upgraded upstream to openlistteam/openlist:v4.2.9: no initial admin password is written to the container log - the first visit opens the setup wizard.",
+  "important": "First visit http://<NAS-IP>:8086/ opens the setup wizard: set the administrator account there, nothing is written to the container log. Data lives in /Volume1/DockerAppData/openlistdocker/ and survives restarts. Forgot the password: docker exec openlistdocker ./openlist admin set <new-password>. The container runs as uid 1000. Needs DockerEngine; configure a registry mirror if Docker Hub is unreachable. Back up the data folder before uninstalling with data removal. Plain HTTP on the LAN.",
   "healthcheck": [
     "CMD-SHELL",
-    "wget -q -O /dev/null http://127.0.0.1:5244/ || exit 1"
+    "wget -q -O /dev/null http://127.0.0.1:5244/ping || exit 1"
   ],
-  "entrypoint_file": "src/entrypoint.sh",
   "platform": "x86_64",
   "user": "1000:1000",
   "publisher": "Moechz",
   "compose_project": "openlistdocker",
   "github_repo": "openlist",
-  "upstream_version": "4.2.2",
+  "upstream_version": "4.2.9",
   "release_tag_prefix": "v",
-  "version": "4.2.2-2",
-  "help": "https://github.com/Moechz/openlist/issues",
+  "version": "4.2.9-1",
+  "help": "https://github.com/Moechz/openlist/blob/main/PRIVACY.md",
   "official": "https://github.com/OpenListTeam/OpenList",
   "license": "AGPL-3.0",
   "docker_socket": false,
@@ -87,12 +46,12 @@
   ],
   "translations": {
     "zh-cn": {
-      "descript": "习惯打卡与连续天数统计，界面简洁。",
-      "important": "首次使用请打开网页完成初始化。数据保存在 DockerAppData/beaverhabitsdocker，重启和升级不会丢失。容器以 uid 1000 运行，挂载目录需对该用户可读。需要 DockerEngine；Docker Hub 不可达时先配置镜像加速。卸载并删除数据前请备份。局域网内为 HTTP。"
+      "descript": "OpenList 是一个文件列表程序：把本地存储和各类云盘聚合到一个网页界面，支持 WebDAV 访问、文件预览、上传与离线下载。本应用直接运行 Docker Hub 官方镜像（非 root），首次访问会进入安装向导设置管理员密码，所有数据保存在应用数据目录。",
+      "important": "首次访问 http://<NAS-IP>:8086/ 会打开安装向导，请在其中设置管理员账户，本版本不会把密码写入容器日志。数据保存在 DockerAppData/openlistdocker，重启和升级不会丢失。忘记密码可在 NAS 上运行 docker exec openlistdocker ./openlist admin set <新密码> 重设。容器以 uid 1000 运行。需要 DockerEngine；Docker Hub 不可达时先配置镜像加速。卸载并删除数据前请备份。局域网内为 HTTP。"
     },
     "zh-hk": {
-      "descript": "习惯打卡与连续天数统计，界面简洁。",
-      "important": "首次使用請開啟網頁完成初始化。資料保存在 DockerAppData/beaverhabitsdocker，重新啟動和升級不會遺失。容器以 uid 1000 運行，掛載目錄需對該使用者可讀。需要 DockerEngine；Docker Hub 不可達時先設定鏡像加速。解除安裝並刪除資料前請備份。區域網路內為 HTTP。"
+      "descript": "OpenList 是一個檔案清單程式：把本機儲存與各類雲端硬碟聚合到一個網頁介面，支援 WebDAV 存取、檔案預覽、上傳與離線下載。本應用直接執行 Docker Hub 官方映像（非 root），首次存取會進入安裝精靈設定管理員密碼，所有資料保存在應用資料目錄。",
+      "important": "首次存取 http://<NAS-IP>:8086/ 會開啟安裝精靈，請在其中設定管理員帳戶，本版本不會把密碼寫入容器日誌。資料保存在 DockerAppData/openlistdocker，重新啟動和升級不會遺失。忘記密碼可在 NAS 上執行 docker exec openlistdocker ./openlist admin set <新密碼> 重設。容器以 uid 1000 運行。需要 DockerEngine；Docker Hub 不可達時先設定鏡像加速。解除安裝並刪除資料前請備份。區域網路內為 HTTP。"
     }
   },
   "host_port": 8086

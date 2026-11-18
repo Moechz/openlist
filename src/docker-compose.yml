@@ -1,7 +1,7 @@
 # ===========================================================================
 # OpenList for TerraMaster TOS 7 (Docker application)
 # ===========================================================================
-# Upstream image : openlistteam/openlist:v4.2.2 (Docker Hub, used unmodified)
+# Upstream image : openlistteam/openlist:v4.2.9 (Docker Hub, used unmodified)
 #                  -> https://github.com/OpenListTeam/OpenList
 #
 # Ports   : host 8086 -> container 5244. The host port is in the
@@ -10,6 +10,13 @@
 # Volumes : all persistent data lives below
 #           /Volume1/DockerAppData/openlistdocker/. The /Volume* wildcard is
 #           deliberately NOT used: the platform does not expand it.
+# User    : the image declares USER openlist (uid 1001); this package pins
+#           1000:1000 so the mounted data folder - which the platform creates
+#           and chowns for the packaging user - is writable. The upstream
+#           entrypoint refuses to start when ./data is not writable, so the
+#           ownership of the host folder matters.
+# Health  : GET /ping is a static route served by the application itself, so it
+#           answers before the administrator completes the setup wizard.
 # TOS rules honoured: Docker Hub image with a fixed tag (never ':latest'),
 #           container_name == application id, restart: unless-stopped,
 #           non-root user, no privileged mode, no network_mode: host, no
@@ -26,7 +33,7 @@
 
 services:
   openlistdocker:
-    image: openlistteam/openlist:v4.2.2
+    image: openlistteam/openlist:v4.2.9
     container_name: openlistdocker
     restart: unless-stopped
     user: "1000:1000"
@@ -34,12 +41,10 @@ services:
       - "8086:5244"
     environment:
       TZ: "Asia/Shanghai"
-      PUID: "1000"
-      PGID: "1000"
     volumes:
       - /Volume1/DockerAppData/openlistdocker/data:/opt/openlist/data
     healthcheck:
-      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:5244/ || exit 1"]
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:5244/ping || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
