@@ -44,18 +44,26 @@ directory”, the ownership of that folder is wrong — fix it with
 
 ## Third-party services (API disclosure)
 
-The developer operates no server in this path and receives no data. The application contacts
-only the services **you configure**, plus the Docker registry at install time.
+The developer operates no server in this path and receives no data. The list below covers
+every endpoint the application **and its web UI** can contact; rows marked “only when you use
+it” stay inactive until you configure or trigger that feature.
 
 | Service | Endpoint | Data sent | Destination / region |
 |---|---|---|---|
 | A storage you mount | that provider's official API/SDK endpoint, for example `graph.microsoft.com`, `www.googleapis.com`, `api.aliyundrive.com`, `pan.baidu.com`, an S3 endpoint, or the WebDAV/SFTP/FTP/SMB address you enter | the stored credentials/tokens and the file operations you request (list, read, upload, move) | the provider you chose, or your own server |
 | OAuth sign-in for such a drive, only when you add it | the provider's authorisation endpoint, for example `login.microsoftonline.com` or `accounts.google.com` | the authorisation request; the token returned is stored in the app database | the provider's servers |
+| Web UI static assets (always) | `cdnjs.cloudflare.com` (polyfill), `res.oplist.org` / `cdn.oplist.org` (logo, default audio cover, PDF.js / EPUB.js viewers) | your browser's IP address and user agent, the asset requested | Cloudflare and the upstream project's CDN |
+| Office preview, only when you open one | `view.officeapps.live.com/op/view.aspx` (Microsoft) or `docs.google.com/gview` (Google) | the preview link of the document; that service fetches the document from it | Microsoft, US / Google, US |
+| PDF / EPUB preview, only when you open one | `res.oplist.org/pdf.js` or `res.oplist.org/epub.js` | the preview link of the file | the upstream project's CDN |
+| OCR, only when you run it | `openlistteam-ocr-api-server.hf.space/ocr/file/json` by default, or the server you configure | the image or PDF you submit for OCR | OpenListTeam's hosted OCR service (Hugging Face) |
+| Single sign-on, only if you enable it | the provider you configure (GitHub, Google, Microsoft, DingTalk, Feishu, OIDC) | the authentication request | that provider's servers |
+| Book metadata, only if you add a Google Books key | `www.googleapis.com/books` | the ISBN or title searched | Google, US |
 | WebDAV / API clients you point at the app | the address you give them | the file operations you perform | your LAN |
 | Image pull at install | `registry-1.docker.io` or your registry mirror | anonymous pull | Docker Hub, US / your mirror |
 
 There is no telemetry, no analytics, no advertising SDK and no update check in the
-application. See `PRIVACY.md` §6 for the same table with more detail.
+application. Preview, OCR and SSO are optional and can be disabled or re-pointed in Settings.
+See `PRIVACY.md` §6 for the same table with more detail.
 
 ## Privacy
 
@@ -68,6 +76,7 @@ the package `help` field opens it directly from the App Center entry:
 | Topic | Detail |
 |---|---|
 | Data processed | App database (users, mounts and their credentials, index cache), settings, logs on stdout |
+| Third-party contacts | Only the endpoints listed above: configured storages, optional preview / OCR / SSO services, the upstream CDN and the Docker registry |
 | Where | `/Volume1/DockerAppData/openlistdocker/data` on your NAS |
 | Retention | Until **you** delete it; no automatic expiry, no upload |
 | Rights | Copy the data folder (export), edit in the web UI (correct), uninstall with “delete data” or remove the folder (delete) |
